@@ -75,7 +75,7 @@ class GoalLineTimeMeasurer(Node):
         if not self.is_timing and current_speed > 0.1:
             self.start_time = self.get_clock().now()
             self.is_timing = True
-            self.get_logger().info("車両が動き出しました。計測を開始します。")
+            self.get_logger().info("Vehicle starts to move. Start measuring...")
 
         # 最初のコールバックではprevious_positionがNoneなので、現在地を記録して終了
         if self.previous_position is None:
@@ -88,11 +88,12 @@ class GoalLineTimeMeasurer(Node):
                 end_time = self.get_clock().now()
                 elapsed_time = (end_time - self.start_time).nanoseconds / 1e9
 
-                self.get_logger().info(f"設定したラインを通過しました！")
-                self.get_logger().info(f"--- 経過時間: {elapsed_time:.2f} 秒 ---")
+                self.get_logger().info(f"Crossed the chosen line. Stop measuring.")
+                self.get_logger().info(f"--- Elapsed Time: {elapsed_time:.2f} sec ---")
 
                 self.is_finished = True
-                self.destroy_node()
+                # self.destroy_node()
+                raise KeyboardInterrupt 
         
         # 次のステップのために現在位置を保存
         self.previous_position = current_pos

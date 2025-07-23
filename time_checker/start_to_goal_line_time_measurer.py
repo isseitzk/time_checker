@@ -34,8 +34,8 @@ class StartToGoalLineTimeMeasurer(Node):
             'p2_y': self.get_parameter('finish_line_p2_y').get_parameter_value().double_value,
         }
 
-        self.get_logger().info(f"スタートライン: ({self.start_line['p1_x']}, {self.start_line['p1_y']}) -> ({self.start_line['p2_x']}, {self.start_line['p2_y']})")
-        self.get_logger().info(f"フィニッシュライン: ({self.finish_line['p1_x']}, {self.finish_line['p1_y']}) -> ({self.finish_line['p2_x']}, {self.finish_line['p2_y']})")
+        self.get_logger().info(f"Measurement Start Line: ({self.start_line['p1_x']}, {self.start_line['p1_y']}) -> ({self.start_line['p2_x']}, {self.start_line['p2_y']})")
+        self.get_logger().info(f"Measurement Finish Line: ({self.finish_line['p1_x']}, {self.finish_line['p1_y']}) -> ({self.finish_line['p2_x']}, {self.finish_line['p2_y']})")
 
         # --- Subscriberの作成 ---
         self.subscription = self.create_subscription(
@@ -80,7 +80,7 @@ class StartToGoalLineTimeMeasurer(Node):
             if self.check_line_crossing(self.start_line, self.previous_position, current_pos):
                 self.start_time = self.get_clock().now()
                 self.state = "TIMING"
-                self.get_logger().info("スタートラインを通過！計測を開始します。")
+                self.get_logger().info("Crossed the start line. Start measuring...")
 
         elif self.state == "TIMING":
             if self.check_line_crossing(self.finish_line, self.previous_position, current_pos):
@@ -88,10 +88,11 @@ class StartToGoalLineTimeMeasurer(Node):
                 elapsed_time = (end_time - self.start_time).nanoseconds / 1e9
                 self.state = "FINISHED"
 
-                self.get_logger().info("フィニッシュラインを通過！")
-                self.get_logger().info(f"--- 経過時間: {elapsed_time:.3f} 秒 ---")
+                self.get_logger().info("Crossed the finish line. Stop measuring.")
+                self.get_logger().info(f"--- Elapsed Time: {elapsed_time:.3f} sec ---")
                 
-                self.destroy_node()
+                # self.destroy_node()
+                raise KeyboardInterrupt 
 
         self.previous_position = current_pos
 
