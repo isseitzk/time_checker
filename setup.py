@@ -22,6 +22,7 @@ setup(
         'console_scripts': [
           'goal_line_time_measurer = time_checker.goal_line_time_measurer:main',
           'start_to_goal_line_time_measurer = time_checker.start_to_goal_line_time_measurer:main',
+          'polygon_pass_opposite_line_time_measurer = time_checker.polygon_pass_opposite_line_time_measurer:main',
         ],
     },
 )
